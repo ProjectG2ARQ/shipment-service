@@ -35,6 +35,3 @@ build/
 ### Archivos de entorno y logs ###
 *.log
 .env
-
-### Configuración local de pruebas ###
-src/test/resources/application.yaml

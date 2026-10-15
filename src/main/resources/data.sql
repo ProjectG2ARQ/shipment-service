@@ -1,0 +1,1 @@
+-- Inicialización de datos de prueba para shipment_db
