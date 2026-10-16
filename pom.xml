@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.1</version>
+        <version>3.4.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ar.edu.unju.fi.arquitecturas</groupId>
@@ -28,6 +28,7 @@
     </scm>
     <properties>
         <java.version>25</java.version>
+        <lombok.version>1.18.36</lombok.version>
     </properties>
     <dependencies>
         <!--JPA / Hibernate-->
@@ -43,7 +44,7 @@
         <!--Spring Web-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <!-- Conector de MySQL -->
         <dependency>
@@ -55,6 +56,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
         <!--Testing-->
@@ -79,14 +81,39 @@
 
     <build>
         <plugins>
+            <!-- Plugin de Spring Boot para empaquetado del proyecto -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <!-- Desactiva la fase 'repackage' durante 'mvn install'/'mvn package':
+                     Evita el error 'Unsupported class file major version 69' al generar el fat jar,
+                     ya que la herramienta de empaquetado de Spring aún no procesa el bytecode de Java 25 -->
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <!-- Excluye Lombok del artefacto final empaquetado -->
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
+
+            <!-- Plugin de compilación de Maven para Java 25 y Lombok -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
+                    <!-- 1. Compilación del código de producción (src/main/java):
+                         Habilita el procesador de anotaciones de Lombok para generar Getters, Setters y Builders -->
                     <execution>
                         <id>default-compile</id>
                         <phase>compile</phase>
@@ -98,10 +125,14 @@
                                 <path>
                                     <groupId>org.projectlombok</groupId>
                                     <artifactId>lombok</artifactId>
+                                    <version>${lombok.version}</version>
                                 </path>
                             </annotationProcessorPaths>
                         </configuration>
                     </execution>
+
+                    <!-- 2. Compilación del código de pruebas (src/test/java):
+                         Sin procesadores de anotaciones: evita conflictos de análisis de clases en los tests bajo Java 25 -->
                     <execution>
                         <id>default-testCompile</id>
                         <phase>test-compile</phase>
@@ -109,18 +140,32 @@
                             <goal>testCompile</goal>
                         </goals>
                         <configuration>
-                            <annotationProcessorPaths>
-                                <path>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </path>
-                            </annotationProcessorPaths>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Plugin de ejecución de pruebas (Surefire):
+                 Pasa argumentos a la JVM para garantizar compatibilidad total con Java 25 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        <!-- Habilita soporte experimental en Byte Buddy para manipular bytecode versión 69 (Java 25) -->
+                        -Dnet.bytebuddy.experimental=true
+
+                        <!-- Permite que el escáner de Spring omita advertencias de formato de clase no soportado -->
+                        -Dspring.classformat.ignore=true
+
+                        <!-- Habilita la carga dinámica de agentes en Java moderno requerida por el inline-mock-maker de Mockito -->
+                        -XX:+EnableDynamicAgentLoading
+                    </argLine>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
     <!--agregado para resolver mensajes en test -->
     <repositories>
         <repository>
