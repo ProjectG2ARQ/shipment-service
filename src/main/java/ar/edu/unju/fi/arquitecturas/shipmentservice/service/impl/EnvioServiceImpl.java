@@ -78,8 +78,11 @@ public class EnvioServiceImpl implements EnvioService {
         Envio envio = envioRepository.findById(id)
                 .orElseThrow(() -> new EnvioNoEncontradoException(id));
 
-        if (envio.getEstado() == EstadoEnvio.ENTREGADO || envio.getEstado() == EstadoEnvio.CANCELADO) {
-            throw EstadoEnvioInvalidoException.estadoTerminal(envio.getEstado());
+        // Validación estricta del flujo PENDIENTE -> EN_RUTA -> ENTREGADO / CANCELADO
+        if (!envio.getEstado().puedeTransicionarA(nuevoEstado)) {
+            throw new EstadoEnvioInvalidoException(
+                    "No se permite la transición de estado desde " + envio.getEstado() + " hacia " + nuevoEstado
+            );
         }
 
         envio.setEstado(nuevoEstado);
@@ -101,7 +104,9 @@ public class EnvioServiceImpl implements EnvioService {
                 .orElseThrow(() -> new EnvioNoEncontradoException(id));
 
         if (!puedeCancelarse(id)) {
-            throw EstadoEnvioInvalidoException.noCancelable(envio.getEstado());
+            throw new EstadoEnvioInvalidoException(
+                    "El envío no se puede cancelar en su estado actual: " + envio.getEstado()
+            );
         }
 
         envio.setEstado(EstadoEnvio.CANCELADO);
