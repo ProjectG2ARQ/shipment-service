@@ -63,6 +63,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Swagger / OpenAPI para documentacion y pruebas desde el navegador -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -115,5 +121,29 @@
             </plugin>
         </plugins>
     </build>
-
+    <!--agregado para resolver mensajes en test -->
+    <repositories>
+        <repository>
+            <id>spring-release</id>
+            <url>https://repo.spring.io/release</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-release</id>
+            <url>https://repo.spring.io/release</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
