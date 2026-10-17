@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 import java.util.UUID;
 
@@ -16,6 +18,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Envio extends AuditableEntity{
+    //agregue esto soy jorge
+    @ManyToOne
+    @JoinColumn(name = "repartidor_id")
+    private Repartidor repartidor;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -1,5 +1,8 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service.impl;
-
+import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Repartidor;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoRepartidor;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.RepartidorRepository;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncontradoException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.CodigoSeguimientoDuplicadoException;
@@ -22,6 +25,8 @@ import java.util.UUID;
 public class EnvioServiceImpl implements EnvioService {
 
     private final EnvioRepository envioRepository;
+    //agregue esto (soy jorge)
+    private final RepartidorRepository repartidorRepository;
 
     @Override
     @Transactional
@@ -111,5 +116,34 @@ public class EnvioServiceImpl implements EnvioService {
 
         envio.setEstado(EstadoEnvio.CANCELADO);
         envioRepository.save(envio);
+    }
+
+    @Override
+    @Transactional
+    public EnvioResponseDto asignarRepartidorAEnvio(UUID envioId, UUID repartidorId) {
+        // 1. Buscar el envío
+        Envio envio = envioRepository.findById(envioId)
+                .orElseThrow(() -> new EnvioNoEncontradoException("No se encontró el envío con ID: " + envioId));
+
+        // 2. Buscar el repartidor
+        Repartidor repartidor = repartidorRepository.findById(repartidorId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el repartidor con ID: " + repartidorId));
+
+        // 3. Validar que el repartidor esté ACTIVO
+        if (repartidor.getEstado() != EstadoRepartidor.ACTIVO) {
+            throw new EstadoEnvioInvalidoException("No se puede asignar un repartidor inactivo.");
+        }
+
+        // 4. Validar que el envío esté PENDIENTE
+        if (envio.getEstado() != EstadoEnvio.PENDIENTE) {
+            throw new EstadoEnvioInvalidoException("El envío no se encuentra en estado PENDIENTE para ser asignado.");
+        }
+
+        // 5. Asignar y guardar
+        envio.setRepartidor(repartidor);
+        Envio envioGuardado = envioRepository.save(envio);
+
+        // 6. Retornar mapeado a DTO usando el mapper estático del equipo
+        return EnvioMapper.toResponseDto(envioGuardado);
     }
 }

@@ -2,6 +2,7 @@ package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Envio;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoEnvio;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface EnvioService {
     boolean puedeCancelarse(UUID id);
 
     void cancelarEnvio(UUID id);
+    //yo agregue esto soy jorge
+    EnvioResponseDto asignarRepartidorAEnvio(UUID envioId, UUID repartidorId);
 }
