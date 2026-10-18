@@ -17,19 +17,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RecursoNoEncotradoException.class)
-    public ResponseEntity<ErrorResponseDto> handleRecursoNoEncontrado(
-            RecursoNoEncotradoException ex, HttpServletRequest request) {
-        ErrorResponseDto error = ErrorResponseDto.builder()
-                .timestamp(Instant.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .error("Not Found")
-                .message(ex.getMessage())
-                .path(request.getRequestURI())
-                .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
     @ExceptionHandler(NegocioException.class)
     public ResponseEntity<ErrorResponseDto> handleNegocio(
             NegocioException ex, HttpServletRequest request) {

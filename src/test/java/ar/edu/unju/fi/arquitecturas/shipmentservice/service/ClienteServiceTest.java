@@ -3,9 +3,10 @@ package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDTO;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDTO;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.NegocioException;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncotradoException;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncontradoException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.ClienteRepository;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.service.impl.ClienteServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,6 +79,6 @@ class ClienteServiceTest {
         UUID idInexistente = UUID.randomUUID();
         when(clienteRepository.findById(idInexistente)).thenReturn(Optional.empty());
 
-        assertThrows(RecursoNoEncotradoException.class, () -> clienteService.obtenerPorId(idInexistente));
+        assertThrows(RecursoNoEncontradoException.class, () -> clienteService.obtenerPorId(idInexistente));
     }
 }

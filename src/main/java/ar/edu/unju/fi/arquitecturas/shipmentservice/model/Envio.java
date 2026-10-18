@@ -18,11 +18,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Envio extends AuditableEntity{
-    //agregue esto soy jorge
-    @ManyToOne
-    @JoinColumn(name = "repartidor_id")
-    private Repartidor repartidor;
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -69,4 +64,8 @@ public class Envio extends AuditableEntity{
     })
     private Direccion destino;
 
+
+    @ManyToOne
+    @JoinColumn(name = "repartidor_id")
+    private Repartidor repartidor;
 }

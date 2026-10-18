@@ -2,7 +2,6 @@ package ar.edu.unju.fi.arquitecturas.shipmentservice.controller;
 
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Envio;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoEnvio;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.EnvioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,7 +67,9 @@ public class EnvioController {
         envioService.cancelarEnvio(id);
         return ResponseEntity.noContent().build();
     }
-    // yo agregue est o pa que no nos confundamos(soy jorge)
+
+
+    
     @PatchMapping("/{envioId}/repartidores/{repartidorId}")
     @Operation(summary = "Asignar un repartidor activo a un envío pendiente")
     public ResponseEntity<EnvioResponseDto> asignarRepartidor(

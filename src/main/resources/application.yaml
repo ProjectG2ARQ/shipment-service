@@ -8,10 +8,10 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  #sql:
-  #  init:
-  #    mode: always
-  #    data-locations: classpath:data.sql
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
 
   jpa:
     hibernate:

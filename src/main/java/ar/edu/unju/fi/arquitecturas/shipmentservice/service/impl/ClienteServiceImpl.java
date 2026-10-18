@@ -1,11 +1,12 @@
-package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
+package ar.edu.unju.fi.arquitecturas.shipmentservice.service.impl;
 
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDTO;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDTO;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.NegocioException;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncotradoException;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncontradoException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.ClienteRepository;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional(readOnly = true)
     public Cliente buscarEntidadPorId(UUID id) {
         return clienteRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncotradoException("Cliente no encontrado con ID: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado con ID: " + id));
     }
 
     @Override
