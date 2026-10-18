@@ -19,15 +19,15 @@ Microservicio de **LogiTrack** con **Spring Boot** y **MySQL** que gestiona el c
 
 ## 🛠️ Tecnologías
 
-| Tecnología | Uso |
-|------------|-----|
-| Java 25 | Lenguaje |
-| Spring Boot 4.1.1 | Framework base |
+| Tecnología                  | Uso |
+|-----------------------------|-----|
+| Java 25                     | Lenguaje |
+| Spring Boot 3.4.3           | Framework base |
 | Spring Data JPA / Hibernate | Persistencia |
-| MySQL 8 (Docker) | Base de datos |
-| springdoc-openapi | Documentación de la API (Swagger) |
-| JUnit 5 / Mockito | Pruebas |
-| Maven (wrapper) | Build |
+| MySQL 8 (Docker)            | Base de datos |
+| springdoc-openapi           | Documentación de la API (Swagger) |
+| JUnit 5 / Mockito           | Pruebas |
+| Maven (wrapper)             | Build |
 
 ## 🧱 Arquitectura
 
