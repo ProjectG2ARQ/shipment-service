@@ -1,12 +1,14 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.controller;
 
-import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Repartidor;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.RepartidorRequestDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.RepartidorResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoRepartidor;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.RepartidorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +31,14 @@ public class RepartidorController {
             @ApiResponse(responseCode = "201", description = "Repartidor registrado con éxito"),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
     })
-    public ResponseEntity<Repartidor> guardarRepartidor(@RequestBody Repartidor repartidor) {
+    public ResponseEntity<RepartidorResponseDto> guardarRepartidor(@Valid @RequestBody RepartidorRequestDto repartidor) {
         return ResponseEntity.status(HttpStatus.CREATED).body(repartidorService.guardarRepartidor(repartidor));
     }
 
     @GetMapping
     @Operation(summary = "Listar todos los repartidores")
     @ApiResponse(responseCode = "200", description = "Listado de repartidores")
-    public ResponseEntity<List<Repartidor>> listarRepartidores() {
+    public ResponseEntity<List<RepartidorResponseDto>> listarRepartidores() {
         return ResponseEntity.ok(repartidorService.obtenerTodosLosRepartidores());
     }
 
@@ -46,14 +48,14 @@ public class RepartidorController {
             @ApiResponse(responseCode = "200", description = "Repartidor encontrado"),
             @ApiResponse(responseCode = "404", description = "Repartidor no encontrado")
     })
-    public ResponseEntity<Repartidor> buscarPorId(@PathVariable UUID id) {
+    public ResponseEntity<RepartidorResponseDto> buscarPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(repartidorService.buscarRepartidorPorId(id));
     }
 
     @GetMapping("/estado/{estado}")
     @Operation(summary = "Listar repartidores por estado")
     @ApiResponse(responseCode = "200", description = "Listado de repartidores filtrados")
-    public ResponseEntity<List<Repartidor>> findByEstado(@PathVariable EstadoRepartidor estado) {
+    public ResponseEntity<List<RepartidorResponseDto>> findByEstado(@PathVariable EstadoRepartidor estado) {
         return ResponseEntity.ok(repartidorService.findByEstado(estado));
     }
 }

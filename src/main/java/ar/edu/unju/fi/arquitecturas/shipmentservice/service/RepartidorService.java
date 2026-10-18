@@ -1,5 +1,7 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.RepartidorRequestDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.RepartidorResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Repartidor;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoRepartidor;
 
@@ -12,33 +14,41 @@ import java.util.UUID;
 public interface RepartidorService {
 
     /**
-     * Registra un nuevo repartidor.
+     * Registra un nuevo repartidor verificando que no exista duplicidad de nombre.
      *
-     * @param repartidor Entidad con los datos del repartidor.
-     * @return Entidad persistida.
+     * @param requestDto Datos del repartidor a registrar.
+     * @return Repartidor persistido en formato DTO.
      */
-    Repartidor guardarRepartidor(Repartidor repartidor);
+    RepartidorResponseDto guardarRepartidor(RepartidorRequestDto requestDto);
 
     /**
-     * Obtiene el total de repartidores registrados.
+     * Obtiene el listado de todos los repartidores registrados.
      *
-     * @return Lista de repartidores.
+     * @return Lista de repartidores en formato DTO.
      */
-    List<Repartidor> obtenerTodosLosRepartidores();
+    List<RepartidorResponseDto> obtenerTodosLosRepartidores();
 
     /**
-     * Localiza un repartidor por su identificador UUID.
+     * Localiza un repartidor por su identificador UUID retornando su DTO.
      *
-     * @param id Identificador del repartidor.
-     * @return Repartidor localizado.
+     * @param id Identificador UUID del repartidor.
+     * @return DTO del repartidor localizado.
      */
-    Repartidor buscarRepartidorPorId(UUID id);
+    RepartidorResponseDto buscarRepartidorPorId(UUID id);
+
+    /**
+     * Busca la entidad de dominio interna Repartidor.
+     *
+     * @param id Identificador UUID del repartidor.
+     * @return Entidad {@link Repartidor}.
+     */
+    Repartidor buscarEntidadPorId(UUID id);
 
     /**
      * Filtra repartidores según su estado operativo.
      *
      * @param estado Estado ACTIVO o INACTIVO.
-     * @return Lista de repartidores coincidentes.
+     * @return Lista de repartidores coincidentes en formato DTO.
      */
-    List<Repartidor> findByEstado(EstadoRepartidor estado);
+    List<RepartidorResponseDto> findByEstado(EstadoRepartidor estado);
 }

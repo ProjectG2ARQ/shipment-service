@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface RepartidorRepository extends JpaRepository<Repartidor, UUID> {
 
     List<Repartidor> findByEstado(EstadoRepartidor estado);
+
+    boolean existsByNombreIgnoreCase(String nombre);
 }
