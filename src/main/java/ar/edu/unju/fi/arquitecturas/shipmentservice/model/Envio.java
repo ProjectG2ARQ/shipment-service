@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Envio {
+public class Envio extends AuditableEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -62,11 +62,4 @@ public class Envio {
     })
     private Direccion destino;
 
-    public Boolean puedeCancelarse() {
-        return this.estado == EstadoEnvio.PENDIENTE;
-    }
-
-    public Double calcularTarifa() {
-        return this.tarifa;
-    }
 }
