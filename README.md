@@ -1,7 +1,7 @@
 # 📦 LogiTrack · shipment-service
 
 ![Java](https://img.shields.io/badge/Java-25-0F766E?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.3-4F46E5?style=for-the-badge&logo=springboot&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.16-4F46E5?style=for-the-badge&logo=springboot&logoColor=white)
 ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.4.0-0EA5E9?style=for-the-badge&logo=mysql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
@@ -22,7 +22,7 @@ Microservicio de **LogiTrack** con **Spring Boot** y **MySQL** que gestiona el c
 | Tecnología                  | Uso |
 |-----------------------------|-----|
 | Java 25                     | Lenguaje |
-| Spring Boot 3.4.3           | Framework base |
+| Spring Boot 3.5.16           | Framework base |
 | Spring Data JPA / Hibernate | Persistencia |
 | MySQL 8 (Docker)            | Base de datos |
 | springdoc-openapi           | Documentación de la API (Swagger) |
