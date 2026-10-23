@@ -1,7 +1,7 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 
-import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDTO;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDTO;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.NegocioException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncontradoException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
@@ -34,7 +34,7 @@ class ClienteServiceTest {
     @Test
     @DisplayName("Debe registrar un cliente correctamente si el email no existe")
     void registrar_EmailNoExiste_GuardaExitosamente() {
-        ClienteRequestDTO request = ClienteRequestDTO.builder()
+        ClienteRequestDto request = ClienteRequestDto.builder()
                 .nombre("Lucas")
                 .email("lucas@sgmail.com")
                 .telefono("388123456")
@@ -51,7 +51,7 @@ class ClienteServiceTest {
         when(clienteRepository.existsByEmail(request.getEmail())).thenReturn(false);
         when(clienteRepository.save(any(Cliente.class))).thenReturn(entidadGuardada);
 
-        ClienteResponseDTO resultado = clienteService.registrar(request);
+        ClienteResponseDto resultado = clienteService.registrar(request);
 
         assertNotNull(resultado);
         assertEquals(request.getEmail(), resultado.getEmail());
@@ -61,7 +61,7 @@ class ClienteServiceTest {
     @Test
     @DisplayName("Debe lanzar NegocioException al intentar registrar un email repetido")
     void registrar_EmailExistente_LanzaExcepcion() {
-        ClienteRequestDTO request = ClienteRequestDTO.builder()
+        ClienteRequestDto request = ClienteRequestDto.builder()
                 .nombre("Lucas")
                 .email("repetido@gmail.com")
                 .telefono("388123456")

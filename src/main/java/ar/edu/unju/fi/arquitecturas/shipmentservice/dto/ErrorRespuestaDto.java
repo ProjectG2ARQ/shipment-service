@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorRespuestaDTO {
+public class ErrorRespuestaDto {
     private LocalDateTime marcaDeTiempo;
     private int estado;
     private String error;

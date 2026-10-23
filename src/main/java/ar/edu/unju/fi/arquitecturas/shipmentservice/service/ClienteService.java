@@ -1,7 +1,7 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 
-import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDTO;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDTO;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface ClienteService {
      * @param request Datos del cliente.
      * @return Cliente registrado en formato DTO.
      */
-    ClienteResponseDTO registrar(ClienteRequestDTO request);
+    ClienteResponseDto registrar(ClienteRequestDto request);
 
     /**
      * Obtiene el DTO de un cliente por su ID.
@@ -26,7 +26,7 @@ public interface ClienteService {
      * @param id Identificador UUID.
      * @return Datos del cliente.
      */
-    ClienteResponseDTO obtenerPorId(UUID id);
+    ClienteResponseDto obtenerPorId(UUID id);
 
     /**
      * Busca la entidad de dominio Cliente.
@@ -41,7 +41,7 @@ public interface ClienteService {
      *
      * @return Lista de clientes DTO.
      */
-    List<ClienteResponseDTO> listarTodos();
+    List<ClienteResponseDto> listarTodos();
 
     /**
      * Actualiza la información de un cliente.
@@ -50,7 +50,7 @@ public interface ClienteService {
      * @param request Nuevos datos.
      * @return DTO del cliente actualizado.
      */
-    ClienteResponseDTO actualizar(UUID id, ClienteRequestDTO request);
+    ClienteResponseDto actualizar(UUID id, ClienteRequestDto request);
 
     /**
      * Elimina un cliente por su ID.

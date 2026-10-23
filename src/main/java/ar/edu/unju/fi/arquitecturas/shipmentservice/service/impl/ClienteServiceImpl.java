@@ -1,7 +1,7 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service.impl;
 
-import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDTO;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDTO;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.NegocioException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncontradoException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
@@ -22,7 +22,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public ClienteResponseDTO registrar(ClienteRequestDTO request) {
+    public ClienteResponseDto registrar(ClienteRequestDto request) {
         if (clienteRepository.existsByEmail(request.getEmail())) {
             throw new NegocioException("Ya existe un cliente registrado con el email: " + request.getEmail());
         }
@@ -39,7 +39,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional(readOnly = true)
-    public ClienteResponseDTO obtenerPorId(UUID id) {
+    public ClienteResponseDto obtenerPorId(UUID id) {
         Cliente cliente = buscarEntidadPorId(id);
         return mapearADTO(cliente);
     }
@@ -53,7 +53,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ClienteResponseDTO> listarTodos() {
+    public List<ClienteResponseDto> listarTodos() {
         return clienteRepository.findAll()
                 .stream()
                 .map(this::mapearADTO)
@@ -62,7 +62,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public ClienteResponseDTO actualizar(UUID id, ClienteRequestDTO request) {
+    public ClienteResponseDto actualizar(UUID id, ClienteRequestDto request) {
         Cliente cliente = buscarEntidadPorId(id);
 
         if (clienteRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
@@ -84,8 +84,8 @@ public class ClienteServiceImpl implements ClienteService {
         clienteRepository.delete(cliente);
     }
 
-    private ClienteResponseDTO mapearADTO(Cliente cliente) {
-        return ClienteResponseDTO.builder()
+    private ClienteResponseDto mapearADTO(Cliente cliente) {
+        return ClienteResponseDto.builder()
                 .id(cliente.getId())
                 .nombre(cliente.getNombre())
                 .email(cliente.getEmail())

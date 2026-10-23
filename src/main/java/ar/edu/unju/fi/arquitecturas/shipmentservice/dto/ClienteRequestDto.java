@@ -13,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Schema(description = "Datos para el registro o actualización de un cliente")
-public class ClienteRequestDTO {
+public class ClienteRequestDto {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 2, max = 120, message = "El nombre debe tener entre 2 y 120 caracteres")

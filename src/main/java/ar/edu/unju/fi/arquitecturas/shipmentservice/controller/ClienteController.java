@@ -1,7 +1,7 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.controller;
 
-import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDTO;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDTO;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,8 +31,8 @@ public class ClienteController {
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos"),
             @ApiResponse(responseCode = "422", description = "Conflicto o email duplicado")
     })
-    public ResponseEntity<ClienteResponseDTO> registrar(@Valid @RequestBody ClienteRequestDTO request) {
-        ClienteResponseDTO nuevoCliente = clienteService.registrar(request);
+    public ResponseEntity<ClienteResponseDto> registrar(@Valid @RequestBody ClienteRequestDto request) {
+        ClienteResponseDto nuevoCliente = clienteService.registrar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCliente);
     }
 
@@ -42,14 +42,14 @@ public class ClienteController {
             @ApiResponse(responseCode = "200", description = "Cliente obtenido correctamente"),
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
-    public ResponseEntity<ClienteResponseDTO> obtenerPorId(@PathVariable UUID id) {
+    public ResponseEntity<ClienteResponseDto> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(clienteService.obtenerPorId(id));
     }
 
     @GetMapping
     @Operation(summary = "Listar todos los clientes registrados")
     @ApiResponse(responseCode = "200", description = "Listado de clientes")
-    public ResponseEntity<List<ClienteResponseDTO>> listarTodos() {
+    public ResponseEntity<List<ClienteResponseDto>> listarTodos() {
         return ResponseEntity.ok(clienteService.listarTodos());
     }
 
@@ -60,9 +60,9 @@ public class ClienteController {
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado"),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
     })
-    public ResponseEntity<ClienteResponseDTO> actualizar(
+    public ResponseEntity<ClienteResponseDto> actualizar(
             @PathVariable UUID id,
-            @Valid @RequestBody ClienteRequestDTO request) {
+            @Valid @RequestBody ClienteRequestDto request) {
         return ResponseEntity.ok(clienteService.actualizar(id, request));
     }
 
