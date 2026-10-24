@@ -1,8 +1,5 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service.impl;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.*;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Repartidor;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoRepartidor;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.RepartidorRepository;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.mapper.EnvioMapper;
@@ -22,7 +19,7 @@ import java.util.UUID;
 public class EnvioServiceImpl implements EnvioService {
 
     private final EnvioRepository envioRepository;
-    private final RepartidorRepository repartidorRepository;
+
 
     @Override
     @Transactional
@@ -112,27 +109,4 @@ public class EnvioServiceImpl implements EnvioService {
         envioRepository.save(envio);
     }
 
-    @Override
-    @Transactional
-    public EnvioResponseDto asignarRepartidorAEnvio(UUID envioId, UUID repartidorId) {
-
-        Envio envio = envioRepository.findById(envioId)
-                .orElseThrow(() -> new EnvioNoEncontradoException("No se encontró el envío con ID: " + envioId));
-
-        Repartidor repartidor = repartidorRepository.findById(repartidorId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el repartidor con ID: " + repartidorId));
-
-        if (repartidor.getEstado() != EstadoRepartidor.ACTIVO) {
-            throw new NegocioException("No se puede asignar un repartidor inactivo.");
-        }
-
-        if (envio.getEstado() != EstadoEnvio.PENDIENTE) {
-            throw new EstadoEnvioInvalidoException("El envío no se encuentra en estado PENDIENTE para ser asignado.");
-        }
-
-        envio.setRepartidor(repartidor);
-        Envio envioGuardado = envioRepository.save(envio);
-
-        return EnvioMapper.toResponseDto(envioGuardado);
-    }
 }
