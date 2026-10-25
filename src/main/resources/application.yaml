@@ -1,12 +1,10 @@
 spring:
   application:
     name: shipment-service
-
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    active: dev
+  config:
+    import: "optional:configserver:http://localhost:8085"
 
   sql:
     init:
@@ -14,8 +12,5 @@ spring:
       data-locations: classpath:data.sql
 
   jpa:
-    hibernate:
-      ddl-auto: update
     defer-datasource-initialization: true
-    show-sql: true
     open-in-view: false
