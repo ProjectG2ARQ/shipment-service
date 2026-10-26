@@ -6,6 +6,11 @@ spring:
   config:
     import: "optional:configserver:http://localhost:8085"
 
+  # Desactiva el chequeo estricto entre versiones de Spring Cloud y Spring Boot 3.5.x
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
   sql:
     init:
       mode: always

@@ -105,17 +105,20 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
 
-                <!-- Desactiva la fase 'repackage' durante 'mvn install'/'mvn package':
-                     Evita el error 'Unsupported class file major version 69' al generar el fat jar,
-                     ya que la herramienta de empaquetado de Spring aún no procesa el bytecode de Java 25 -->
+                <!-- Forzamos la ejecución del repackage para crear el JAR ejecutable -->
                 <executions>
                     <execution>
-                        <id>repackage</id>
-                        <phase>none</phase>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
                     </execution>
                 </executions>
 
                 <configuration>
+                    <!-- Al declarar la clase Main explícitamente, evitamos que Spring
+                         intente escanear el bytecode de Java 25 y se rompa -->
+                    <mainClass>ar.edu.unju.fi.arquitecturas.shipmentservice.ShipmentServiceApplication</mainClass>
+
                     <!-- Excluye Lombok del artefacto final empaquetado -->
                     <excludes>
                         <exclude>
