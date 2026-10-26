@@ -109,4 +109,14 @@ public class EnvioServiceImpl implements EnvioService {
         envioRepository.save(envio);
     }
 
+    @Override
+    @Transactional
+    public EnvioResponseDto asignarRepartidorAEnvio(UUID envioId, UUID repartidorId) {
+        Envio envio = envioRepository.findById(envioId)
+                .orElseThrow(() -> new EnvioNoEncontradoException(envioId));
+
+        envio.setRepartidorId(repartidorId);
+        return EnvioMapper.toResponseDto(envioRepository.save(envio));
+    }
+
 }

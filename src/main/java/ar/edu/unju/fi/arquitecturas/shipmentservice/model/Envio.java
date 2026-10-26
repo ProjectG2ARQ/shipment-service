@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
 
 import java.util.UUID;
 
@@ -65,7 +63,6 @@ public class Envio extends AuditableEntity{
     private Direccion destino;
 
 
-    @ManyToOne
-    @JoinColumn(name = "repartidor_id")
-    private Repartidor repartidor;
+    @Column(name = "repartidor_id")
+    private UUID repartidorId;
 }

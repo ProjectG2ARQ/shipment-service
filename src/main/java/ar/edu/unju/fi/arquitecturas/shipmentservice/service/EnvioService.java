@@ -83,4 +83,5 @@ public interface EnvioService {
      * @param repartidorId Identificador UUID del repartidor.
      * @return Envío actualizado con el repartidor asignado.
      */
+    EnvioResponseDto asignarRepartidorAEnvio(UUID envioId, UUID repartidorId);
 }
