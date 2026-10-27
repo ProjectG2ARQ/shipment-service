@@ -1,5 +1,6 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.DireccionDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
@@ -33,7 +34,8 @@ class EnvioServiceTest {
 
     @Mock
     private EnvioRepository envioRepository;
-
+    @Mock
+    private HttpServletRequest request; // <-- Agregás esta línea acá
     @InjectMocks
     private EnvioServiceImpl envioService;
 

@@ -1,15 +1,21 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service.impl;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.*;
+
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.RepartidorCourierDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.*;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.mapper.EnvioMapper;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Envio;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoEnvio;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.EnvioRepository;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.EnvioService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +25,7 @@ import java.util.UUID;
 public class EnvioServiceImpl implements EnvioService {
 
     private final EnvioRepository envioRepository;
-
+    private final HttpServletRequest request;
 
     @Override
     @Transactional
@@ -115,8 +121,28 @@ public class EnvioServiceImpl implements EnvioService {
         Envio envio = envioRepository.findById(envioId)
                 .orElseThrow(() -> new EnvioNoEncontradoException(envioId));
 
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        RestClient restClient = RestClient.create();
+
+        try {
+            RepartidorCourierDto repartidor = restClient.get()
+                    .uri("http://localhost:8081/api/v1/repartidores/" + repartidorId)
+                    .header(HttpHeaders.AUTHORIZATION, authHeader)
+                    .retrieve()
+                    .body(RepartidorCourierDto.class);
+
+            if (repartidor == null || "INACTIVO".equals(repartidor.getEstado())) {
+                throw new NegocioException("No se puede asignar: el repartidor se encuentra INACTIVO.");
+            }
+
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new RecursoNoEncontradoException("No se encontró ningún repartidor con el ID: " + repartidorId);
+        } catch (HttpClientErrorException.Forbidden | HttpClientErrorException.Unauthorized e) {
+            throw new NegocioException("Error de permisos al consultar el repartidor. Verificá el Token.");
+        }
+
         envio.setRepartidorId(repartidorId);
         return EnvioMapper.toResponseDto(envioRepository.save(envio));
     }
-
 }
