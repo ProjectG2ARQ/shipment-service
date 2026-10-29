@@ -19,5 +19,3 @@ spring:
   jpa:
     defer-datasource-initialization: true
     open-in-view: false
-  jwt:
-    secret: ${JWT_SECRET:MiClaveSecretaSuperSeguraParaLogiTrackSprint2UNJu2026}
