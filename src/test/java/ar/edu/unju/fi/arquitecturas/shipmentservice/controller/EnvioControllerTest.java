@@ -42,6 +42,7 @@ class EnvioControllerTest {
     private EnvioController envioController;
 
     private UUID idEnvio;
+    private UUID clienteId;
     private EnvioRequestDto requestDto;
     private EnvioResponseDto responseDto;
 
@@ -52,6 +53,7 @@ class EnvioControllerTest {
                 .build();
 
         idEnvio = UUID.randomUUID();
+        clienteId = UUID.randomUUID();
 
         DireccionDto direccionDto = DireccionDto.builder()
                 .calle("Av. Siempre Viva")
@@ -61,7 +63,7 @@ class EnvioControllerTest {
                 .build();
 
         requestDto = EnvioRequestDto.builder()
-                .codigoSeguimiento("TRK-98765")
+                .clienteId(clienteId) // <-- Agregado para cumplir con la nueva validación
                 .peso(2.5)
                 .ancho(10.0)
                 .alto(15.0)
@@ -73,6 +75,7 @@ class EnvioControllerTest {
         responseDto = EnvioResponseDto.builder()
                 .id(idEnvio)
                 .codigoSeguimiento("TRK-98765")
+                .clienteId(clienteId)
                 .peso(2.5)
                 .tarifa(2125.0)
                 .estado(EstadoEnvio.PENDIENTE)
@@ -91,7 +94,7 @@ class EnvioControllerTest {
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(idEnvio.toString()))
-                .andExpect(jsonPath("$.codigoSeguimiento").value("TRK-98765"))
+                .andExpect(jsonPath("$.clienteId").value(clienteId.toString()))
                 .andExpect(jsonPath("$.tarifa").value(2125.0))
                 .andExpect(jsonPath("$.estado").value("PENDIENTE"));
     }

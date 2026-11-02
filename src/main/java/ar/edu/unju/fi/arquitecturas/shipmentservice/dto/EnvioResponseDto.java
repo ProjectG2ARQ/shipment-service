@@ -17,6 +17,10 @@ public class EnvioResponseDto {
 
     private UUID id;
     private String codigoSeguimiento;
+
+    @Schema(example = "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+    private UUID clienteId;
+
     private Double peso;
     private Double ancho;
     private Double alto;

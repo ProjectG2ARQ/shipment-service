@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Envio extends AuditableEntity{
+public class Envio extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -24,6 +24,10 @@ public class Envio extends AuditableEntity{
 
     @Column(name = "codigo_seguimiento", unique = true, nullable = false)
     private String codigoSeguimiento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
 
     @Column(name = "peso")
     private Double peso;
@@ -61,7 +65,6 @@ public class Envio extends AuditableEntity{
             @AttributeOverride(name = "codigoPostal", column = @Column(name = "destino_codigo_postal"))
     })
     private Direccion destino;
-
 
     @Column(name = "repartidor_id")
     private UUID repartidorId;

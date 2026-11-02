@@ -14,7 +14,6 @@ public final class EnvioMapper {
         if (dto == null) return null;
 
         Envio envio = new Envio();
-        envio.setCodigoSeguimiento(dto.getCodigoSeguimiento());
         envio.setPeso(dto.getPeso());
         envio.setAncho(dto.getAncho());
         envio.setAlto(dto.getAlto());
@@ -61,6 +60,7 @@ public final class EnvioMapper {
         return EnvioResponseDto.builder()
                 .id(entity.getId())
                 .codigoSeguimiento(entity.getCodigoSeguimiento())
+                .clienteId(entity.getCliente() != null ? entity.getCliente().getId() : null)
                 .peso(entity.getPeso())
                 .ancho(entity.getAncho())
                 .alto(entity.getAlto())

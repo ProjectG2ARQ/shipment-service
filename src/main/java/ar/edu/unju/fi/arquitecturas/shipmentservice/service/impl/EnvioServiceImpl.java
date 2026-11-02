@@ -5,8 +5,10 @@ import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.RepartidorCourierDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.*;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.mapper.EnvioMapper;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Envio;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoEnvio;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.ClienteRepository;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.EnvioRepository;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.EnvioService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,16 +27,24 @@ import java.util.UUID;
 public class EnvioServiceImpl implements EnvioService {
 
     private final EnvioRepository envioRepository;
+    private final ClienteRepository clienteRepository;
     private final HttpServletRequest request;
 
     @Override
     @Transactional
     public EnvioResponseDto crearEnvio(EnvioRequestDto requestDto) {
-        if (envioRepository.findByCodigoSeguimiento(requestDto.getCodigoSeguimiento()).isPresent()) {
-            throw new CodigoSeguimientoDuplicadoException(requestDto.getCodigoSeguimiento());
-        }
+        Cliente cliente = clienteRepository.findById(requestDto.getClienteId())
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el cliente con ID: " + requestDto.getClienteId()));
 
         Envio envio = EnvioMapper.toEntity(requestDto);
+        envio.setCliente(cliente);
+
+        String codigoGenerado;
+        do {
+            codigoGenerado = "TRK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        } while (envioRepository.findByCodigoSeguimiento(codigoGenerado).isPresent());
+
+        envio.setCodigoSeguimiento(codigoGenerado);
 
         double peso = (envio.getPeso() != null) ? envio.getPeso() : 1.0;
         envio.setTarifa(1500.0 + (peso * 250.0));
@@ -122,12 +132,11 @@ public class EnvioServiceImpl implements EnvioService {
                 .orElseThrow(() -> new EnvioNoEncontradoException(envioId));
 
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-
         RestClient restClient = RestClient.create();
 
         try {
             RepartidorCourierDto repartidor = restClient.get()
-                    .uri("http://localhost:8081/api/v1/repartidores/" + repartidorId)
+                    .uri("http://courier-service:8081/api/v1/repartidores/" + repartidorId)
                     .header(HttpHeaders.AUTHORIZATION, authHeader)
                     .retrieve()
                     .body(RepartidorCourierDto.class);

@@ -2,10 +2,11 @@ package ar.edu.unju.fi.arquitecturas.shipmentservice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,9 +16,9 @@ import lombok.*;
 @Schema(description = "Datos para registrar un nuevo envío")
 public class EnvioRequestDto {
 
-    @NotBlank(message = "El código de seguimiento es obligatorio")
-    @Schema(example = "TRACK-JUJ-001")
-    private String codigoSeguimiento;
+    @NotNull(message = "El ID del cliente es obligatorio")
+    @Schema(example = "11111111-1111-1111-1111-111111111111")
+    private UUID clienteId;
 
     @NotNull(message = "El peso es obligatorio")
     @Positive(message = "El peso debe ser mayor a 0")
