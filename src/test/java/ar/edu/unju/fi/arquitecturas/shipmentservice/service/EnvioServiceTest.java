@@ -1,5 +1,6 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 
+import ar.edu.unju.fi.arquitecturas.shipmentservice.client.CourierFeignClient;
 import jakarta.servlet.http.HttpServletRequest;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.DireccionDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
@@ -41,6 +42,9 @@ class EnvioServiceTest {
 
     @Mock
     private HttpServletRequest request;
+
+    @Mock
+    private CourierFeignClient courierFeignClient;
 
     @InjectMocks
     private EnvioServiceImpl envioService;

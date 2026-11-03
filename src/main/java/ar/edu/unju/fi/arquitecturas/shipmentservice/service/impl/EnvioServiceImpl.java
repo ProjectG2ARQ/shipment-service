@@ -1,5 +1,6 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service.impl;
 
+import ar.edu.unju.fi.arquitecturas.shipmentservice.client.CourierFeignClient;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.RepartidorCourierDto;
@@ -16,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EnvioServiceImpl implements EnvioService {
 
+    private final CourierFeignClient courierFeignClient;
     private final EnvioRepository envioRepository;
     private final ClienteRepository clienteRepository;
     private final HttpServletRequest request;
@@ -132,22 +132,17 @@ public class EnvioServiceImpl implements EnvioService {
                 .orElseThrow(() -> new EnvioNoEncontradoException(envioId));
 
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        RestClient restClient = RestClient.create();
 
         try {
-            RepartidorCourierDto repartidor = restClient.get()
-                    .uri("http://courier-service:8081/api/v1/repartidores/" + repartidorId)
-                    .header(HttpHeaders.AUTHORIZATION, authHeader)
-                    .retrieve()
-                    .body(RepartidorCourierDto.class);
+            RepartidorCourierDto repartidor = courierFeignClient.obtenerRepartidorPorId(repartidorId, authHeader);
 
             if (repartidor == null || "INACTIVO".equals(repartidor.getEstado())) {
                 throw new NegocioException("No se puede asignar: el repartidor se encuentra INACTIVO.");
             }
 
-        } catch (HttpClientErrorException.NotFound e) {
+        } catch (feign.FeignException.NotFound e) {
             throw new RecursoNoEncontradoException("No se encontró ningún repartidor con el ID: " + repartidorId);
-        } catch (HttpClientErrorException.Forbidden | HttpClientErrorException.Unauthorized e) {
+        } catch (feign.FeignException.Forbidden | feign.FeignException.Unauthorized e) {
             throw new NegocioException("Error de permisos al consultar el repartidor. Verificá el Token.");
         }
 

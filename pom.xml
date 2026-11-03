@@ -109,6 +109,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Spring Cloud OpenFeign para comunicación declarativa -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
         <!-- Eureka-Server -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
