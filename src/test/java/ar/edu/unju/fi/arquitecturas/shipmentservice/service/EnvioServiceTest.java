@@ -6,7 +6,6 @@ import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.DireccionDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.EnvioNoEncontradoException;
-import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.EstadoEnvioInvalidoException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Direccion;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Envio;
@@ -22,8 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

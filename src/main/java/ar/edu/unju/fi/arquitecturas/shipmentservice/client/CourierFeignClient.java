@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.UUID;
 
-// "courier-service" es el nombre registrado en Eureka
 @FeignClient(name = "courier-service", fallback = CourierFeignClientFallback.class)
 public interface CourierFeignClient {
 
