@@ -14,3 +14,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+# Propiedad necesaria
+jwt:
+  secret: MiClaveSecretaSuperSeguraParaLogiTrackSprint2UNJu2026DeAlMenos256Bits

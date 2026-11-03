@@ -10,8 +10,6 @@ public class CourierFeignClientFallback implements CourierFeignClient {
 
     @Override
     public RepartidorCourierDto obtenerRepartidorPorId(UUID id, String token) {
-        // En caso de caída de red, timeout o error 500 en courier-service,
-        // retorna un objeto seguro indicando que el servicio no está disponible
         return RepartidorCourierDto.builder()
                 .estado("INDISPONIBLE")
                 .build();
