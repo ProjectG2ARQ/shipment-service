@@ -29,4 +29,7 @@ public class ClienteRequestDto {
     @Pattern(regexp = "^[0-9+()\\-\\s]{6,30}$", message = "El formato del teléfono es inválido")
     @Schema(example = "+54 388 4123456")
     private String telefono;
+
+    @Schema(description = "ID del usuario en security-service", example = "9")
+    private Long userId;
 }
