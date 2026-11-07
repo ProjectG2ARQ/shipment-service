@@ -23,15 +23,14 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public ClienteResponseDto registrar(ClienteRequestDto request) {
-        if (request.getUserId() != null && clienteRepository.findByUserId(request.getUserId()).isPresent()) {
-            throw new NegocioException("Ya existe un perfil de cliente para ese usuario");
+        if (clienteRepository.existsByEmail(request.getEmail())) {
+            throw new NegocioException("Ya existe un cliente registrado con el email: " + request.getEmail());
         }
 
         Cliente cliente = Cliente.builder()
                 .nombre(request.getNombre())
                 .email(request.getEmail())
                 .telefono(request.getTelefono())
-                .userId(request.getUserId())
                 .build();
 
         Cliente guardado = clienteRepository.save(cliente);
