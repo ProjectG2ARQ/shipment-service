@@ -33,6 +33,9 @@ public class Cliente {
     @Column(name = "telefono", length = 30)
     private String telefono;
 
+    @Column(name = "user_id", unique = true)
+    private Long userId;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

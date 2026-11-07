@@ -94,4 +94,11 @@ public class ClienteServiceImpl implements ClienteService {
                 .updatedAt(cliente.getUpdatedAt())
                 .build();
     }
+    @Override
+    @Transactional(readOnly = true)
+    public ClienteResponseDto obtenerPorUserId(Long userId) {
+        Cliente cliente = clienteRepository.findByUserId(userId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("No existe un perfil de cliente asociado al usuario ID: " + userId));
+        return mapearADTO(cliente);
+    }
 }

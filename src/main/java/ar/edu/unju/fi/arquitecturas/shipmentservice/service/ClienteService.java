@@ -58,4 +58,6 @@ public interface ClienteService {
      * @param id Identificador UUID.
      */
     void eliminar(UUID id);
+
+    ClienteResponseDto obtenerPorUserId(Long userId);
 }

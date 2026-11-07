@@ -4,10 +4,10 @@ TRUNCATE TABLE envios;
 TRUNCATE TABLE clientes;
 SET FOREIGN_KEY_CHECKS = 1;
 
-INSERT INTO clientes (id, nombre, email, telefono, created_at, updated_at) VALUES
-                                                                               (UUID_TO_BIN('11111111-1111-1111-1111-111111111111', 0), 'Juan Perez', 'juan.perez@logitrack.com', '+54 388 4123456', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                               (UUID_TO_BIN('22222222-2222-2222-2222-222222222222', 0), 'Maria Lopez', 'maria.lopez@logitrack.com', '+54 388 4987654', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                               (UUID_TO_BIN('33333333-3333-3333-3333-333333333333', 0), 'Lucas Gomez', 'lucas.gomez@logitrack.com', '+54 388 4771122', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO clientes (id, nombre, email, telefono, user_id, created_at, updated_at) VALUES
+                                                                                        (UUID_TO_BIN('11111111-1111-1111-1111-111111111111', 0), 'Juan Perez', 'juan.perez@logitrack.com', '+54 388 4123456', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                        (UUID_TO_BIN('22222222-2222-2222-2222-222222222222', 0), 'Maria Lopez', 'maria.lopez@logitrack.com', '+54 388 4987654', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                        (UUID_TO_BIN('33333333-3333-3333-3333-333333333333', 0), 'Lucas Armella', 'lucas@logitrack.com', '+54 388 4771122', 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO envios (
     id, codigo_seguimiento, cliente_id, peso, ancho, alto, largo, tarifa, estado,

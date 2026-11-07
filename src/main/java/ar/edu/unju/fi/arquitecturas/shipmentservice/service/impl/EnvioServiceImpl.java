@@ -120,6 +120,15 @@ public class EnvioServiceImpl implements EnvioService {
                     "El envío no se puede cancelar en su estado actual: " + envio.getEstado()
             );
         }
+        String userIdHeader = request.getHeader("X-Auth-User-Id");
+        String userRoleHeader = request.getHeader("X-Auth-User-Role");
+
+        if (userIdHeader != null && !"ADMIN".equalsIgnoreCase(userRoleHeader)) {
+            Long usuarioAutenticadoId = Long.parseLong(userIdHeader);
+            if (envio.getCliente() == null || !usuarioAutenticadoId.equals(envio.getCliente().getUserId())) {
+                throw new NegocioException("Acceso denegado: este paquete no pertenece a su cuenta.");
+            }
+        }
 
         envio.setEstado(EstadoEnvio.CANCELADO);
         envioRepository.save(envio);
@@ -149,4 +158,5 @@ public class EnvioServiceImpl implements EnvioService {
         envio.setRepartidorId(repartidorId);
         return EnvioMapper.toResponseDto(envioRepository.save(envio));
     }
+
 }

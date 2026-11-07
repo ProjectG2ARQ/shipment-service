@@ -2,6 +2,7 @@ package ar.edu.unju.fi.arquitecturas.shipmentservice.controller;
 
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.NegocioException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -75,5 +76,14 @@ public class ClienteController {
     public ResponseEntity<Void> eliminar(@PathVariable UUID id) {
         clienteService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/mi-perfil")
+    @Operation(summary = "Obtener el cliente asociado al usuario autenticado")
+    public ResponseEntity<ClienteResponseDto> obtenerMiPerfil(
+            @RequestHeader(value = "X-Auth-User-Id", required = false) Long userId) {
+        if (userId == null) {
+            throw new NegocioException("Falta la cabecera de identificación de usuario.");
+        }
+        return ResponseEntity.ok(clienteService.obtenerPorUserId(userId));
     }
 }
