@@ -84,4 +84,5 @@ public interface EnvioService {
      * @return Envío actualizado con el repartidor asignado.
      */
     EnvioResponseDto asignarRepartidorAEnvio(UUID envioId, UUID repartidorId);
+    void cancelarEnvioPorCliente(String codigoSeguimiento, Long userId);
 }

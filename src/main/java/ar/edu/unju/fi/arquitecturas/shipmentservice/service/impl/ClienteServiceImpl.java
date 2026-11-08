@@ -7,6 +7,7 @@ import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncontrad
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.ClienteRepository;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.ClienteService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final HttpServletRequest request;
 
     @Override
     @Transactional
@@ -28,6 +30,7 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         Cliente cliente = Cliente.builder()
+                .userId(request.getUserId())
                 .nombre(request.getNombre())
                 .email(request.getEmail())
                 .telefono(request.getTelefono())
@@ -94,11 +97,34 @@ public class ClienteServiceImpl implements ClienteService {
                 .updatedAt(cliente.getUpdatedAt())
                 .build();
     }
+
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ClienteResponseDto obtenerPorUserId(Long userId) {
-        Cliente cliente = clienteRepository.findByUserId(userId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("No existe un perfil de cliente asociado al usuario ID: " + userId));
-        return mapearADTO(cliente);
+        return clienteRepository.findByUserId(userId)
+                .map(this::mapearADTO)
+                .orElseGet(() -> {
+                    // Si el cliente no existe en shipment_db, lo da de alta en el primer login
+                    String emailHeader = request.getHeader("X-Auth-User-Email");
+                    String emailFinal = (emailHeader != null && !emailHeader.isBlank())
+                            ? emailHeader
+                            : "usuario" + userId + "@logitrack.com";
+
+                    String nombreFinal = emailFinal.contains("@")
+                            ? emailFinal.split("@")[0]
+                            : "Cliente " + userId;
+
+                    Cliente nuevoCliente = Cliente.builder()
+                            .userId(userId)
+                            .email(emailFinal)
+                            .nombre(nombreFinal)
+                            .telefono("+54 388 0000000")
+                            .build();
+
+                    Cliente clientePersistido = clienteRepository.save(nuevoCliente);
+                    return mapearADTO(clientePersistido);
+                });
     }
+
+
 }

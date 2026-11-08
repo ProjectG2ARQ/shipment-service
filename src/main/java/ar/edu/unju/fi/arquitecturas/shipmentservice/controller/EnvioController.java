@@ -2,6 +2,7 @@ package ar.edu.unju.fi.arquitecturas.shipmentservice.controller;
 
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.NegocioException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoEnvio;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.EnvioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,5 +78,16 @@ public class EnvioController {
             @PathVariable UUID repartidorId) {
 
         return ResponseEntity.ok(envioService.asignarRepartidorAEnvio(envioId, repartidorId));
+    }
+    @PostMapping("/{codigoSeguimiento}/cancelar")
+    @Operation(summary = "Cancelar envio garantizando titularidad del cliente")
+    public ResponseEntity<Void> cancelarEnvio(
+            @PathVariable String codigoSeguimiento,
+            @RequestHeader(value = "X-Auth-User-Id", required = false) Long userId) {
+        if (userId == null) {
+            throw new NegocioException("Falta la identificación del usuario autenticado.");
+        }
+        envioService.cancelarEnvioPorCliente(codigoSeguimiento, userId);
+        return ResponseEntity.noContent().build();
     }
 }

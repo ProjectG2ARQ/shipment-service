@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/actuator/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/clientes").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/shipments", "/api/v1/envios").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/shipments/*/assign/**", "/api/v1/envios/*/asignar/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/shipments/*/assign/**", "/api/v1/envios/*/asignar/**").hasRole("ADMIN")

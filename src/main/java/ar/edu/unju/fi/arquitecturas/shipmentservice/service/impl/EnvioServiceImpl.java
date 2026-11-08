@@ -158,5 +158,22 @@ public class EnvioServiceImpl implements EnvioService {
         envio.setRepartidorId(repartidorId);
         return EnvioMapper.toResponseDto(envioRepository.save(envio));
     }
+    @Override
+    @Transactional
+    public void cancelarEnvioPorCliente(String codigoSeguimiento, Long userId) {
+
+        Cliente clienteAutenticado = clienteRepository.findByUserId(userId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el perfil del cliente solicitante."));
+        Envio envio = envioRepository.findByCodigoSeguimiento(codigoSeguimiento)
+                .orElseThrow(() -> new RecursoNoEncontradoException("No existe un envío con el código: " + codigoSeguimiento));
+        if (!envio.getCliente().getId().equals(clienteAutenticado.getId())) {
+            throw new NegocioException("Acceso denegado: este envío pertenece a otro cliente.");
+        }
+        if (envio.getEstado() != EstadoEnvio.PENDIENTE) {
+            throw new NegocioException("No se puede cancelar un envío que ya está en tránsito o entregado.");
+        }
+        envio.setEstado(EstadoEnvio.CANCELADO);
+        envioRepository.save(envio);
+    }
 
 }
