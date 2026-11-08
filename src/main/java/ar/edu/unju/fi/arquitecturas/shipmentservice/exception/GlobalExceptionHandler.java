@@ -92,11 +92,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGlobal(
             Exception ex, HttpServletRequest request) {
+        ex.printStackTrace();
         ErrorResponseDto error = ErrorResponseDto.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error("Internal Server Error")
-                .message("Ocurrió un error inesperado en el servidor")
+                .message("Error interno: " + ex.getClass().getSimpleName() + " - " + ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

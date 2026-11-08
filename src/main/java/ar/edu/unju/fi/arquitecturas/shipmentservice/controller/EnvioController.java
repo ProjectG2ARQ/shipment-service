@@ -62,12 +62,12 @@ public class EnvioController {
         return ResponseEntity.ok(envioService.actualizarEstado(id, nuevoEstado));
     }
 
-    @PostMapping("/{id}/cancelar")
+    /*@PostMapping("/{id}/cancelar")
     @Operation(summary = "Cancelar un envío en estado PENDIENTE")
     public ResponseEntity<Void> cancelarEnvio(@PathVariable UUID id) {
         envioService.cancelarEnvio(id);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
 
     
