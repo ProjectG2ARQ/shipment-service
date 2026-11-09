@@ -1,5 +1,6 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.dto;
 
+import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoCliente;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -25,6 +26,8 @@ public class ClienteResponseDto {
 
     @Schema(example = "+54 388 4123456")
     private String telefono;
+
+    private EstadoCliente estado;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

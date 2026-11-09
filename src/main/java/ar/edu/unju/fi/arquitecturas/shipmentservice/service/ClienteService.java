@@ -57,7 +57,7 @@ public interface ClienteService {
      *
      * @param id Identificador UUID.
      */
-    void eliminar(UUID id);
+    void eliminar(UUID id, Long userId, String userRole);
 
     ClienteResponseDto obtenerPorUserId(Long userId);
 }

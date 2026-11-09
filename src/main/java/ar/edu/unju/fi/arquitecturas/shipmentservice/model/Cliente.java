@@ -1,5 +1,6 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.model;
 
+import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoCliente;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,6 +33,11 @@ public class Cliente {
 
     @Column(name = "telefono", length = 30)
     private String telefono;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private EstadoCliente estado = EstadoCliente.ACTIVO;
 
     @Column(name = "user_id", unique = true)
     private Long userId;

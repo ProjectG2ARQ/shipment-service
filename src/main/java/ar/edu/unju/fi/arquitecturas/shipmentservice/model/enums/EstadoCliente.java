@@ -1,4 +1,7 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums;
 
-public class EstadoCliente {
+public enum EstadoCliente {
+    ACTIVO,
+    INACTIVO,
+    ELIMINADO
 }

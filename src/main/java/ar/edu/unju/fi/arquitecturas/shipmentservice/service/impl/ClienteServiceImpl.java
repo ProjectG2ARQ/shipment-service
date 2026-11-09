@@ -5,6 +5,7 @@ import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.ClienteResponseDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.NegocioException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncontradoException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoCliente;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.repository.ClienteRepository;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.service.ClienteService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,10 +31,11 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         Cliente cliente = Cliente.builder()
-                .userId(request.getUserId())
                 .nombre(request.getNombre())
                 .email(request.getEmail())
                 .telefono(request.getTelefono())
+                .userId(request.getUserId())
+                .estado(EstadoCliente.ACTIVO)
                 .build();
 
         Cliente guardado = clienteRepository.save(cliente);
@@ -57,8 +59,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional(readOnly = true)
     public List<ClienteResponseDto> listarTodos() {
-        return clienteRepository.findAll()
-                .stream()
+        return clienteRepository.findByEstadoNot(EstadoCliente.ELIMINADO).stream()
                 .map(this::mapearADTO)
                 .toList();
     }
@@ -82,9 +83,17 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public void eliminar(UUID id) {
+    public void eliminar(UUID id, Long userId, String userRole) {
         Cliente cliente = buscarEntidadPorId(id);
-        clienteRepository.delete(cliente);
+
+        if (!"ADMIN".equalsIgnoreCase(userRole)) {
+            if (userId == null || cliente.getUserId() == null || !cliente.getUserId().equals(userId)) {
+                throw new NegocioException("Acceso denegado: no puedes dar de baja una cuenta ajena.");
+            }
+        }
+
+        cliente.setEstado(EstadoCliente.ELIMINADO);
+        clienteRepository.save(cliente);
     }
 
     private ClienteResponseDto mapearADTO(Cliente cliente) {
@@ -93,6 +102,7 @@ public class ClienteServiceImpl implements ClienteService {
                 .nombre(cliente.getNombre())
                 .email(cliente.getEmail())
                 .telefono(cliente.getTelefono())
+                .estado(cliente.getEstado())
                 .createdAt(cliente.getCreatedAt())
                 .updatedAt(cliente.getUpdatedAt())
                 .build();
@@ -119,6 +129,7 @@ public class ClienteServiceImpl implements ClienteService {
                             .email(emailFinal)
                             .nombre(nombreFinal)
                             .telefono("+54 388 0000000")
+                            .estado(EstadoCliente.ACTIVO)
                             .build();
 
                     Cliente clientePersistido = clienteRepository.save(nuevoCliente);

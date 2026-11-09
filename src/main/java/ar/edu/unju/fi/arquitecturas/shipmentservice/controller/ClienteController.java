@@ -68,15 +68,21 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar un cliente por su ID")
+    @Operation(summary = "Eliminar un cliente por su ID (Admin o titular)")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Cliente eliminado con éxito"),
+            @ApiResponse(responseCode = "403", description = "No tiene permiso para eliminar esta cuenta"),
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
-    public ResponseEntity<Void> eliminar(@PathVariable UUID id) {
-        clienteService.eliminar(id);
+    public ResponseEntity<Void> eliminar(
+            @PathVariable UUID id,
+            @RequestHeader(value = "X-Auth-User-Id", required = false) Long userId,
+            @RequestHeader(value = "X-Auth-User-Role", required = false) String userRole) {
+
+        clienteService.eliminar(id, userId, userRole);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/mi-perfil")
     @Operation(summary = "Obtener el cliente asociado al usuario autenticado")
     public ResponseEntity<ClienteResponseDto> obtenerMiPerfil(

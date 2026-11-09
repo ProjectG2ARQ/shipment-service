@@ -1,9 +1,11 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.repository;
 
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.Cliente;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoCliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,4 +19,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
     Optional<Cliente> findByEmail(String email);
 
     Optional<Cliente> findByUserId(Long userId);
+
+    List<Cliente> findByEstadoNot(EstadoCliente estado);
 }
