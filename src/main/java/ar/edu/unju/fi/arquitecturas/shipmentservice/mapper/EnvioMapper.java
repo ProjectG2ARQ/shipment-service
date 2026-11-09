@@ -70,6 +70,7 @@ public final class EnvioMapper {
                 .estado(entity.getEstado())
                 .origen(origenDto)
                 .destino(destinoDto)
+                .repartidorId(entity.getRepartidorId())
                 .fechaCreacion(entity.getFechaCreacion())
                 .fechaUltimaModificacion(entity.getFechaUltimaModificacion())
                 .build();

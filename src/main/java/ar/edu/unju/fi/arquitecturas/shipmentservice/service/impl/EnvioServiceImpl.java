@@ -111,31 +111,6 @@ public class EnvioServiceImpl implements EnvioService {
 
     @Override
     @Transactional
-    public void cancelarEnvio(UUID id) {
-        Envio envio = envioRepository.findById(id)
-                .orElseThrow(() -> new EnvioNoEncontradoException(id));
-
-        if (!puedeCancelarse(id)) {
-            throw new EstadoEnvioInvalidoException(
-                    "El envío no se puede cancelar en su estado actual: " + envio.getEstado()
-            );
-        }
-        String userIdHeader = request.getHeader("X-Auth-User-Id");
-        String userRoleHeader = request.getHeader("X-Auth-User-Role");
-
-        if (userIdHeader != null && !"ADMIN".equalsIgnoreCase(userRoleHeader)) {
-            Long usuarioAutenticadoId = Long.parseLong(userIdHeader);
-            if (envio.getCliente() == null || !usuarioAutenticadoId.equals(envio.getCliente().getUserId())) {
-                throw new NegocioException("Acceso denegado: este paquete no pertenece a su cuenta.");
-            }
-        }
-
-        envio.setEstado(EstadoEnvio.CANCELADO);
-        envioRepository.save(envio);
-    }
-
-    @Override
-    @Transactional
     public EnvioResponseDto asignarRepartidorAEnvio(UUID envioId, UUID repartidorId) {
         Envio envio = envioRepository.findById(envioId)
                 .orElseThrow(() -> new EnvioNoEncontradoException(envioId));
@@ -158,22 +133,27 @@ public class EnvioServiceImpl implements EnvioService {
         envio.setRepartidorId(repartidorId);
         return EnvioMapper.toResponseDto(envioRepository.save(envio));
     }
+
     @Override
     @Transactional
-    public void cancelarEnvioPorCliente(String codigoSeguimiento, Long userId) {
-
-        Cliente clienteAutenticado = clienteRepository.findByUserId(userId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el perfil del cliente solicitante."));
+    public void cancelarEnvioPorClienteOAdmin(String codigoSeguimiento, Long userId, String userRole) {
         Envio envio = envioRepository.findByCodigoSeguimiento(codigoSeguimiento)
-                .orElseThrow(() -> new RecursoNoEncontradoException("No existe un envío con el código: " + codigoSeguimiento));
-        if (!envio.getCliente().getId().equals(clienteAutenticado.getId())) {
-            throw new NegocioException("Acceso denegado: este envío pertenece a otro cliente.");
-        }
+                .orElseThrow(() -> new EnvioNoEncontradoException(codigoSeguimiento));
+
         if (envio.getEstado() != EstadoEnvio.PENDIENTE) {
-            throw new NegocioException("No se puede cancelar un envío que ya está en tránsito o entregado.");
+            throw new EstadoEnvioInvalidoException("Solo se pueden cancelar envíos en estado PENDIENTE.");
         }
+
+        if (!"ADMIN".equalsIgnoreCase(userRole)) {
+            Cliente cliente = clienteRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el perfil del cliente solicitante."));
+
+            if (envio.getCliente() == null || !envio.getCliente().getId().equals(cliente.getId())) {
+                throw new NegocioException("Acceso denegado: este paquete no pertenece a su cuenta.");
+            }
+        }
+
         envio.setEstado(EstadoEnvio.CANCELADO);
         envioRepository.save(envio);
     }
-
 }

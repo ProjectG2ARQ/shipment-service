@@ -2,6 +2,10 @@ package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioResponseDto;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.EnvioNoEncontradoException;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.EstadoEnvioInvalidoException;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.NegocioException;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.RecursoNoEncontradoException;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.model.enums.EstadoEnvio;
 
 import java.util.List;
@@ -70,11 +74,13 @@ public interface EnvioService {
     boolean puedeCancelarse(UUID id);
 
     /**
-     * Cancela un envío si cumple las condiciones del negocio.
+     * Cancela un envío en estado PENDIENTE validando permisos según el rol (ADMIN o CLIENTE).
      *
-     * @param id Identificador UUID del envío a cancelar.
+     * @param codigoSeguimiento Código de seguimiento del envío.
+     * @param userId            ID del usuario autenticado.
+     * @param userRole          Rol del usuario (ADMIN o CLIENTE).
      */
-    void cancelarEnvio(UUID id);
+    void cancelarEnvioPorClienteOAdmin(String codigoSeguimiento, Long userId, String userRole);
 
     /**
      * Asigna un repartidor en estado ACTIVO a un paquete PENDIENTE.
@@ -84,5 +90,4 @@ public interface EnvioService {
      * @return Envío actualizado con el repartidor asignado.
      */
     EnvioResponseDto asignarRepartidorAEnvio(UUID envioId, UUID repartidorId);
-    void cancelarEnvioPorCliente(String codigoSeguimiento, Long userId);
 }

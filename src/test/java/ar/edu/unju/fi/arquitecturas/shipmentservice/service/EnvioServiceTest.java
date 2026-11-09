@@ -1,6 +1,7 @@
 package ar.edu.unju.fi.arquitecturas.shipmentservice.service;
 
 import ar.edu.unju.fi.arquitecturas.shipmentservice.client.CourierFeignClient;
+import ar.edu.unju.fi.arquitecturas.shipmentservice.exception.EstadoEnvioInvalidoException;
 import jakarta.servlet.http.HttpServletRequest;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.DireccionDto;
 import ar.edu.unju.fi.arquitecturas.shipmentservice.dto.EnvioRequestDto;
@@ -140,16 +141,50 @@ class EnvioServiceTest {
     }
 
     @Test
-    @DisplayName("Debe cancelar el envío exitosamente si está en estado PENDIENTE")
-    void cancelarEnvio_EstadoPendiente_Exito() {
-        envioEjemplo.setEstado(EstadoEnvio.PENDIENTE);
-        when(envioRepository.findById(envioId)).thenReturn(Optional.of(envioEjemplo));
-        when(envioRepository.save(any(Envio.class))).thenReturn(envioEjemplo);
+    @DisplayName("Debe cancelar un envío en estado PENDIENTE cuando lo solicita su cliente titular")
+    void cancelarEnvio_ClienteTitular_CancelaExitosamente() {
+        UUID envioId = UUID.randomUUID();
+        UUID clienteId = UUID.randomUUID();
+        Long userId = 4L;
 
-        envioService.cancelarEnvio(envioId);
+        Cliente cliente = Cliente.builder()
+                .id(clienteId)
+                .userId(userId)
+                .build();
 
-        assertEquals(EstadoEnvio.CANCELADO, envioEjemplo.getEstado());
-        verify(envioRepository, times(1)).save(envioEjemplo);
+        Envio envio = new Envio();
+        envio.setId(envioId);
+        envio.setCodigoSeguimiento("TRK-JUJ-001");
+        envio.setEstado(EstadoEnvio.PENDIENTE);
+        envio.setCliente(cliente);
+
+        when(envioRepository.findByCodigoSeguimiento("TRK-JUJ-001")).thenReturn(Optional.of(envio));
+        when(clienteRepository.findByUserId(userId)).thenReturn(Optional.of(cliente));
+        when(envioRepository.save(any(Envio.class))).thenReturn(envio);
+
+        envioService.cancelarEnvioPorClienteOAdmin("TRK-JUJ-001", userId, "CLIENTE");
+
+        assertEquals(EstadoEnvio.CANCELADO, envio.getEstado());
+        verify(envioRepository).save(envio);
+    }
+
+    @Test
+    @DisplayName("Debe lanzar EstadoEnvioInvalidoException si el envío no se encuentra en estado PENDIENTE")
+    void cancelarEnvio_NoPendiente_LanzaExcepcion() {
+        UUID envioId = UUID.randomUUID();
+
+        Envio envio = new Envio();
+        envio.setId(envioId);
+        envio.setCodigoSeguimiento("TRK-JUJ-002");
+        envio.setEstado(EstadoEnvio.EN_RUTA);
+
+        when(envioRepository.findByCodigoSeguimiento("TRK-JUJ-002")).thenReturn(Optional.of(envio));
+
+        assertThrows(EstadoEnvioInvalidoException.class, () -> {
+            envioService.cancelarEnvioPorClienteOAdmin("TRK-JUJ-002", 4L, "CLIENTE");
+        });
+
+        verify(envioRepository, never()).save(any(Envio.class));
     }
 
     @Test

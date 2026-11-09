@@ -29,6 +29,9 @@ public class EnvioResponseDto {
     private EstadoEnvio estado;
     private DireccionDto origen;
     private DireccionDto destino;
+
+    private UUID repartidorId;
+
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaUltimaModificacion;
 }

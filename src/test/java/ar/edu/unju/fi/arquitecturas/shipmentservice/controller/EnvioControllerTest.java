@@ -158,11 +158,19 @@ class EnvioControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/envios/{id}/cancelar - Debe retornar 204 NO CONTENT al cancelar con éxito")
+    @DisplayName("POST /api/v1/envios/{codigoSeguimiento}/cancelar - Debe retornar 204 NO CONTENT al cancelar con éxito")
     void cancelarEnvio_Valido_RetornaNoContent() throws Exception {
-        doNothing().when(envioService).cancelarEnvio(idEnvio);
+        String tracking = "TRK-98765";
+        Long userId = 1L;
+        String userRole = "ADMIN";
 
-        mockMvc.perform(post("/api/v1/envios/{id}/cancelar", idEnvio))
+        doNothing().when(envioService).cancelarEnvioPorClienteOAdmin(tracking, userId, userRole);
+
+        mockMvc.perform(post("/api/v1/envios/{codigoSeguimiento}/cancelar", tracking)
+                        .header("X-Auth-User-Id", String.valueOf(userId))
+                        .header("X-Auth-User-Role", userRole))
                 .andExpect(status().isNoContent());
+
+        verify(envioService, times(1)).cancelarEnvioPorClienteOAdmin(tracking, userId, userRole);
     }
 }
