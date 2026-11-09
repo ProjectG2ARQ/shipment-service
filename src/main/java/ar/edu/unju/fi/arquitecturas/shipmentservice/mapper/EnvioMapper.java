@@ -61,6 +61,7 @@ public final class EnvioMapper {
                 .id(entity.getId())
                 .codigoSeguimiento(entity.getCodigoSeguimiento())
                 .clienteId(entity.getCliente() != null ? entity.getCliente().getId() : null)
+                .repartidorId(entity.getRepartidorId())
                 .peso(entity.getPeso())
                 .ancho(entity.getAncho())
                 .alto(entity.getAlto())
