@@ -71,14 +71,15 @@ public class EnvioController {
         return ResponseEntity.ok(envioService.asignarRepartidorAEnvio(envioId, repartidorId));
     }
     @PostMapping("/{codigoSeguimiento}/cancelar")
-    @Operation(summary = "Cancelar envio garantizando titularidad del cliente")
+    @Operation(summary = "Cancelar envio garantizando titularidad del cliente o permiso de administrador")
     public ResponseEntity<Void> cancelarEnvio(
             @PathVariable String codigoSeguimiento,
-            @RequestHeader(value = "X-Auth-User-Id", required = false) Long userId) {
+            @RequestHeader(value = "X-Auth-User-Id", required = false) Long userId,
+            @RequestHeader(value = "X-Auth-User-Role", required = false) String userRole) {
         if (userId == null) {
             throw new NegocioException("Falta la identificación del usuario autenticado.");
         }
-        envioService.cancelarEnvioPorCliente(codigoSeguimiento, userId);
+        envioService.cancelarEnvioPorClienteOAdmin(codigoSeguimiento, userId, userRole);
         return ResponseEntity.noContent().build();
     }
 }
