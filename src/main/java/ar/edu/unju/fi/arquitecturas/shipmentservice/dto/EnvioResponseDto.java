@@ -20,6 +20,7 @@ public class EnvioResponseDto {
 
     @Schema(example = "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
     private UUID clienteId;
+
     private UUID repartidorId;
     private Double peso;
     private Double ancho;
@@ -29,8 +30,6 @@ public class EnvioResponseDto {
     private EstadoEnvio estado;
     private DireccionDto origen;
     private DireccionDto destino;
-
-    private UUID repartidorId;
 
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaUltimaModificacion;
